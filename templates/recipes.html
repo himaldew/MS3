@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content%}
+    {% for recipe in recipes %}
+        {{ recipe.recipe_name }}<br>
+        {{ recipe.cuisine }}<br>
+        {{ recipe.cooking_time }}<br>
+        {{ recipe.ingredients }}<br>
+        {{ recipe.recipe_description }}<br>
+        {{ recipe.cooking_method }}<br>
+    {% endfor %}
+{% endblock %}
