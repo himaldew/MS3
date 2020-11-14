@@ -1,3 +1,10 @@
 .flashes h4 {
-    line-height: 2;
+    line-height: 4;
+}
+.btn-small{
+    margin:5px;
+}
+
+.modal{
+    background-color: red;
 }

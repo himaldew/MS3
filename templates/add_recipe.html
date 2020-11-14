@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block content %}
+    <h3 class="light-blue-text text-darken-4 center-align">Add Recipe</h3>
+	
+        <div class="row card-panel ">
+            <form class="col s12" method="POST" action="{{ url_for('add_recipe') }}">
+                <div class="row">
+                    <div class="input-field col s12 m6">
+                        <i class="fas fa-utensils prefix light-blue-text text-darken-4"></i>
+                        <input id="recipe_name" name="recipe_name" type="text" class="validate" required>
+                        <label for="recipe_name">Recipe Name</label>
+                    </div>
+                    <div class="input-field col s6">
+                    <i class="fas fa-folder-open prefix light-blue-text text-darken-4"></i>
+                        <select id="category_name" name="category_name" class="validate" required>
+                            <option value="" disabled selected>Choose Type</option>
+                            {% for category in categories %}
+                                <option value="{{ category.category_name }}">{{ category.category_name }}</option>
+                            {% endfor %}
+                        </select>
+                            <label for="category_name">Menu Type</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12 m6">
+                        <i class="fas fa-utensils prefix light-blue-text text-darken-4"></i>
+                        <input id="cuisine" name="cuisine" type="text" class="validate" required>
+                        <label for="cuisine">Cuisine</label>
+                    </div>
+                    <div class="input-field col s12 m6">
+                        <i class="fas fa-utensils prefix light-blue-text text-darken-4"></i>
+                        <input id="cooking_time" name="cooking_time" type="text" class="validate">
+                        <label for="cooking_time">Cooking Time</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <i class="fas fa-align-left prefix light-blue-text text-darken-4"></i>
+                        <textarea id="ingredients" name="ingredients" class="materialize-textarea validate" required></textarea>
+                        <label for="ingredients">Ingredients</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <i class="fas fa-align-left prefix light-blue-text text-darken-4"></i>
+                        <textarea id="recipe_description" name="recipe_description" class="materialize-textarea validate" required></textarea>
+                        <label for="recipe_description">Recipe Description</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <i class="fas fa-align-left prefix light-blue-text text-darken-4"></i>
+                        <textarea id="cooking_method" name="cooking_method" class="materialize-textarea validate" required></textarea>
+                        <label for="cooking_method">Cooking Method</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s6">
+                        <i class="fas fa-calendar-alt prefix light-blue-text text-darken-4"></i>
+                        <input id="uploaded_at" name="uploaded_at" type="text" class="datepicker validate" required>
+                        <label for="uploaded_at">Uploaded date</label>
+                    </div>
+                </div>
+				<div class="row">
+                    <div class="col s12 center-align">
+                        <button type="submit" class="btn-large light-blue darken-1 ">
+                            Add Recipe <i class="fas fa-plus-square right"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+{% endblock %}

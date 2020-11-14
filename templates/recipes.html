@@ -1,11 +1,70 @@
 {% extends "base.html" %}
 {% block content%}
-    {% for recipe in recipes %}
-        {{ recipe.recipe_name }}<br>
-        {{ recipe.cuisine }}<br>
-        {{ recipe.cooking_time }}<br>
-        {{ recipe.ingredients }}<br>
-        {{ recipe.recipe_description }}<br>
-        {{ recipe.cooking_method }}<br>
-    {% endfor %}
-{% endblock %}
+   
+	<div class="parallax-container">
+		<div class="parallax"><img src="{{ url_for('static', filename='images/food.jpg') }}"></div>
+		</div>
+		<div class="section white">
+			<div class="row container">
+				<h3 class="light-blue-text text-darken-4 center-align">All Recipes</h3>
+				<ul class="collapsible popout">
+					{% for recipe in recipes %}
+					<li>
+						<div class="collapsible-header white-text light-blue text-darken-4">
+							<div class="col s12">
+								<div class="col m8">
+									<i class="fas fa-caret-square-down"></i>
+									<strong>{{ recipe.recipe_name }}</strong> : {{ recipe.category_name }}
+								</div>
+								<div class="col m4">
+	
+									<a href="" class="btn-small green accent-4">View</a>
+									{% if session.user|lower == recipe.uploaded_by %}
+									<a href="{{ url_for('edit_recipe', recipe_id=recipe._id) }}"
+										class="btn-small blue accent-4">Edit</a>
+									<a href="#modal1" class="btn-small red accent-2 modal-trigger">Delete</a>
+									<!-- Modal Structure -->
+									<div id="modal1" class="modal">
+										<div class="modal-content">
+											<h4 class="light-blue-text text-darken-4">Confirm Delete</h4>
+											<p class="black-text">Do you really want to delete?</p>
+										</div>
+										<div class="modal-footer">
+											<a href="#!" class="modal-close white-text red accent-4 btn ">Cancel</a>
+											<a href="{{ url_for('delete_recipe', recipe_id=recipe._id) }}"
+												class="modal-close white-text green btn">Confirm</a>
+										</div>
+									</div>
+									{% endif %}
+								</div>
+							</div>
+						</div>
+						<div class="collapsible-body">
+							<strong>{{ recipe.recipe_description }}</strong>
+							<p> by : {{ recipe.uploaded_by }}</p>
+						</div>
+					</li>
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
+		<div class="parallax-container">
+			<div class="parallax"><img src="/static/images/chicken.jpg"></div>
+			</div>
+	
+			<ul class="collapsible popout">
+				{% for recipe in recipes %}
+				<li>
+					<div class="collapsible-header white-text light-blue text-darken-4">
+						<i class="fas fa-caret-square-down"></i>
+						<strong>{{ recipe.recipe_name }}</strong> : {{ recipe.category_name }}
+					</div>
+					<div class="collapsible-body">
+						<strong>{{ recipe.recipe_description }}</strong>
+						<p> by : {{ uploaded_by }}</p>
+					</div>
+				</li>
+				{% endfor %}
+			</ul>
+	
+			{% endblock %}
