@@ -4,7 +4,9 @@
 .btn-small{
     margin:5px;
 }
-
 .modal{
     background-color: red;
+}
+.pagination{
+    margin-right: 20 px;
 }

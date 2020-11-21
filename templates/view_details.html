@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+    <h3 class="light-blue-text text-darken-4 center-align">{{ recipe.recipe_name }}</h3>
+    <div class="row container-image">
+        <div class="col s12 m8 offset-m2">
+            <img  class="materialboxed " width="100%"  src="{{ recipe.image }}">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="card-panel light-grey col s12 m8 offset-m2 ">
+        
+            <p  class="left-align"><strong class="blue-text text-darken-4">Description:</strong> {{ recipe.recipe_description }} </p>
+            <p  class="left-align"><strong class="blue-text text-darken-4">Ingredients:</strong> {{ recipe.ingredients }} </p>
+            <p  class="left-align"><strong class="blue-text text-darken-4">How to cook:</strong> {{ recipe.cooking_method }} </p>
+        </div>
+    </div>
+       
+{% endblock %}

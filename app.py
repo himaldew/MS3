@@ -1,7 +1,8 @@
 import os 
-from flask import Flask, flash, render_template, redirect, request, session, url_for 
+from flask import Flask, flash, render_template, redirect, request, session, url_for
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
+from flask_paginate import Pagination, get_page_parameter
 from werkzeug.security import generate_password_hash, check_password_hash
 if os.path.exists("env.py"):
     import env
@@ -14,12 +15,39 @@ app.secret_key = os.environ.get("SECRET_KEY")
 
 mongo = PyMongo(app)
 
+
 # Get the Recipes from DB
 @app.route("/")
 @app.route("/get_recipes")
 def get_recipes():
-    recipes = list(mongo.db.recipes.find())
-    return render_template ("recipes.html", recipes=recipes)
+    search = False
+    query = request.args.get('query')
+    if query:
+        search = True
+
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    per_page = 10
+    offset = (page - 1) * per_page
+    recipes = mongo.db.recipes.find().skip(offset).limit(per_page)
+     
+    pagination = Pagination(
+        page=page,
+        total=recipes.count(),
+        search=search,
+        offset=offset,
+        per_page=per_page,
+        )
+
+    return render_template('recipes.html', recipes=recipes,
+                           pagination=pagination )   
+    #recipes = list(mongo.db.recipes.find())
+    #return render_template("recipes.html", recipes=recipes)
+
+# view recipe
+@app.route("/view_details/<recipe_id>")   
+def view_details(recipe_id):
+    recipe = mongo.db.recipes.find_one({"_id": ObjectId(recipe_id)})
+    return render_template("view_details.html", recipe=recipe)
 
 #Registration functionality
 @app.route("/register", methods=["GET", "POST"])
@@ -78,20 +106,20 @@ def logout():
     session.pop("user")   
     return redirect(url_for("login"))
 
-
+# Add data to Database
 @app.route("/add_recipe", methods=["GET","POST"])
 def add_recipe():
-    if request.method =="POST":
+    if request.method == "POST" :
         recipe = {
             "category_name": request.form.get("category_name"),
-            "recipe_name" : request.form.get("recipe_name"),
-            "cuisine" : request.form.get("cuisine"),
-            "cooking_time" : request.form.get("cooking_time"),
-            "ingredients" : request.form.get("ingredients"),
+            "recipe_name": request.form.get("recipe_name"),
+            "cuisine": request.form.get("cuisine"),
+            "cooking_time": request.form.get("cooking_time"),
+            "ingredients": request.form.get("ingredients"),
             "recipe_description": request.form.get("recipe_description"),
             "cooking_method": request.form.get("cooking_method"),
             "uploaded_by": session["user"],
-            "udloaded_at": request.form.get("udloaded_at")
+            "image": request.form.get("image")
         }
         mongo.db.recipes.insert_one(recipe)
         flash("Recipe succesfully added!")
@@ -100,7 +128,7 @@ def add_recipe():
     categories = mongo.db.categories.find().sort("category_name", 1)
     return render_template("add_recipe.html", categories=categories)
 
-
+# Update database to database
 @app.route("/edit_recipe/<recipe_id>", methods=["GET","POST"])
 def edit_recipe(recipe_id):
     if request.method =="POST":
@@ -113,7 +141,7 @@ def edit_recipe(recipe_id):
             "recipe_description": request.form.get("recipe_description"),
             "cooking_method": request.form.get("cooking_method"),
             "uploaded_by": session["user"],
-            "udloaded_at": request.form.get("udloaded_at")
+            "image": request.form.get("image")
         }
         mongo.db.recipes.update({"_id":ObjectId(recipe_id)}, submit)
         flash("Recipe succesfully updated!")
@@ -128,6 +156,11 @@ def delete_recipe(recipe_id):
     mongo.db.recipes.remove({"_id": ObjectId(recipe_id)})
     flash("Recipe succesfully deleted!")
     return redirect(url_for("get_recipes"))
+
+#Showing statistics
+@app.route("/stats") 
+def stats():
+    return render_template("stats.html")
 
 if __name__ == "__main__":
     app.run(host=os.environ.get("IP"),
